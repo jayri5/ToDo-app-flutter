@@ -51,8 +51,10 @@ class Todo extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: TodoList(),
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          scaffoldBackgroundColor: Colors.orange,
+          primarySwatch: Colors.pink,
+          //scaffoldBackgroundColor: Colors.orange,
         ));
   }
 }
@@ -70,14 +72,48 @@ class _TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Basic To-Do App')),
-      body: ListView(children: _getItems()),
-      // add items to the to-do list
-      floatingActionButton: FloatingActionButton(
-          onPressed: () => _displayDialog(context),
-          tooltip: 'Add Item',
-          child: Icon(Icons.add)),
-    );
+        appBar: AppBar(title: const Text('ToDo App')),
+        //body: ListView(children: _getItems()),
+        body: Container(
+          decoration: BoxDecoration(color: Color(0xff4542f5)),
+          child: Column(
+            children: <Widget>[
+              Text(
+                "Hey there, that's me in the corner!",
+                //"You can add or delete your everyday tasks now!!",
+                textAlign: TextAlign.justify,
+                style: TextStyle(color: Colors.white),
+              ),
+              Expanded(
+                child: Center(
+                  child: ListView(children: _getItems()),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Image.asset('assets/me.png', width: 150, height: 200),
+              )
+            ],
+          ),
+        ),
+        floatingActionButton:
+            Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+          FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () => _displayDialogadd(context),
+            tooltip: 'Add Item',
+            backgroundColor: Colors.pink,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          FloatingActionButton(
+            child: Icon(Icons.delete),
+            onPressed: () => _displayDialogdel(context),
+            tooltip: 'Delete Item',
+            backgroundColor: Colors.pink,
+          )
+        ]));
   }
 
   void _addTodoItem(String title) {
@@ -85,7 +121,6 @@ class _TodoListState extends State<TodoList> {
     // the app that the state has changed
     setState(() {
       _todoList.add(title);
-      //_todoList.remove(title);
     });
     _textFieldController.clear();
   }
@@ -94,7 +129,6 @@ class _TodoListState extends State<TodoList> {
     // Wrapping it inside a set state will notify
     // the app that the state has changed
     setState(() {
-      //_todoList.add(title);
       _todoList.remove(title);
     });
     _textFieldController.clear();
@@ -106,7 +140,7 @@ class _TodoListState extends State<TodoList> {
   }
 
   // display a dialog for the user to enter items
-  Future<AlertDialog> _displayDialog(BuildContext context) async {
+  Future<AlertDialog> _displayDialogadd(BuildContext context) async {
     // alter the app state to show a dialog
     return showDialog(
         context: context,
@@ -126,6 +160,31 @@ class _TodoListState extends State<TodoList> {
                   _addTodoItem(_textFieldController.text);
                 },
               ),
+              // Cancel button
+              FlatButton(
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        }).then((value) => value ?? 0);
+  }
+
+  Future<AlertDialog> _displayDialogdel(BuildContext context) async {
+    // alter the app state to show a dialog
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Delete a task from your list'),
+            content: TextField(
+              controller: _textFieldController,
+              decoration: const InputDecoration(hintText: 'Enter task here'),
+            ),
+            actions: <Widget>[
+              // add button
               FlatButton(
                 child: const Text('DEL'),
                 onPressed: () {
