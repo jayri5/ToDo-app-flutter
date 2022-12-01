@@ -1,4 +1,4 @@
-# first flutter app!
+
 A new Flutter project created with https://flutlab.io
 This basic to-do app has both adding and deleting daily tasks. Also comes with a background color so it's beautiful!
 
